@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学奥林匹克课程 - 曙光将至</title>
+    <link rel="shortcut icon" href="https://cdn.luogu.com.cn/upload/image_hosting/cto5owfw.png" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        nav {
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(74, 85, 104, 0.5);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        nav .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #63b3ed;
+            text-shadow: 0 0 15px rgba(99, 179, 237, 0.5);
+        }
+
+        nav .nav-links {
+            display: flex;
+            gap: 1.8rem;
+        }
+
+        nav .nav-links a {
+            color: #cbd5e0;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav .nav-links a:hover {
+            color: #fff;
+            background: rgba(99, 179, 237, 0.15);
+        }
+
+        nav .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #63b3ed;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        nav .nav-links a:hover::after {
+            width: 70%;
+        }
+
+        .RoundImg {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(99, 179, 237, 0.5);
+            box-shadow: 0 0 15px rgba(99, 179, 237, 0.3);
+        }
+
+        main {
+            padding: 3rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex: 1;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #63b3ed, #90cdf4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(99, 179, 237, 0.2);
+            text-align: center;
+        }
+
+        main p {
+            color: #a0aec0;
+            margin-bottom: 2.5rem;
+            font-size: 1.2rem;
+            max-width: 800px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 课程页面布局样式 */
+        .lessons-container {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .lessons-container {
+                flex-direction: column;
+            }
+        }
+
+        .lessons-list {
+            flex: 1;
+            max-width: 400px;
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(74, 85, 104, 0.3);
+            overflow: hidden;
+        }
+
+        .lessons-list-header {
+            background: rgba(15, 23, 42, 0.9);
+            padding: 1.2rem;
+            border-bottom: 1px solid rgba(74, 85, 104, 0.3);
+        }
+
+        .lessons-list-header h2 {
+            font-size: 1.5rem;
+            color: #90cdf4;
+            margin-bottom: 0.5rem;
+        }
+
+        .lessons-list-header p {
+            color: #a0aec0;
+            font-size: 0.9rem;
+            text-align: left;
+            margin: 0;
+        }
+
+        .lessons-list-content {
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .lesson-item {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .lesson-item:hover {
+            background: rgba(99, 179, 237, 0.1);
+            border-color: rgba(99, 179, 237, 0.3);
+        }
+
+        .lesson-item.active {
+            background: rgba(99, 179, 237, 0.15);
+            border-color: rgba(99, 179, 237, 0.5);
+        }
+
+        .lesson-number {
+            display: inline-block;
+            background: rgba(99, 179, 237, 0.2);
+            color: #63b3ed;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: 600;
+        }
+
+        .lesson-title {
+            font-weight: 500;
+            color: #e2e8f0;
+        }
+
+        .lesson-files {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            margin-top: 5px;
+            margin-left: 40px;
+        }
+
+        .video-container {
+            flex: 2;
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(74, 85, 104, 0.3);
+            overflow: hidden;
+        }
+
+        .video-header {
+            background: rgba(15, 23, 42, 0.9);
+            padding: 1.2rem;
+            border-bottom: 1px solid rgba(74, 85, 104, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .video-header h2 {
+            font-size: 1.5rem;
+            color: #90cdf4;
+        }
+
+        .file-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .file-selector select {
+            background: rgba(30, 41, 59, 0.8);
+            color: #e2e8f0;
+            border: 1px solid rgba(74, 85, 104, 0.5);
+            border-radius: 6px;
+            padding: 6px 12px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .video-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .video-player {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 400px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #a0aec0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .video-placeholder .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #63b3ed;
+        }
+
+        footer {
+            background: rgba(15, 23, 42, 0.95);
+            padding: 2.5rem 2rem;
+            color: #a0aec0;
+            border-top: 1px solid rgba(74, 85, 104, 0.4);
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+        }
+
+        .footer-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .footer-logo:hover {
+            transform: rotate(2deg) scale(1.05);
+            box-shadow: 0 8px 20px rgba(99, 179, 237, 0.3);
+        }
+
+        .footer-links-container {
+            display: flex;
+            gap: 40px;
+        }
+
+        .footer-links-column {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .footer-links-column h3 {
+            color: #63b3ed;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid rgba(99, 179, 237, 0.3);
+        }
+
+        .footer-links-column a {
+            color: #cbd5e0;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 8px;
+            background: rgba(30, 41, 59, 0.6);
+            width: fit-content;
+            min-width: 160px;
+        }
+
+        .footer-links-column a:hover {
+            background: rgba(99, 179, 237, 0.2);
+            color: #fff;
+            transform: translateX(8px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-links-column a::before {
+            content: "»";
+            color: #63b3ed;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links-column a:hover::before {
+            opacity: 1;
+        }
+
+        .footer-right {
+            text-align: right;
+            min-width: 300px;
+            padding-top: 10px;
+        }
+
+        .footer-right p {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .footer-right a {
+            color: #63b3ed;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .footer-right a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #63b3ed;
+            transition: width 0.3s ease;
+        }
+
+        .footer-right a:hover::after {
+            width: 100%;
+        }
+
+        .footer-right a:hover {
+            color: #90cdf4;
+            text-shadow: 0 0 8px rgba(99, 179, 237, 0.4);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1100px) {
+            .footer-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .footer-left {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .footer-right {
+                text-align: left;
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav .container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .footer-links-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .lessons-container {
+            animation: fadeIn 0.6s ease forwards;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+        
+        .loading-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #63b3ed;
+            border-radius: 50%;
+            margin: 0 3px;
+            animation: loadingAnimation 1.2s infinite ease-in-out;
+        }
+        
+        .loading-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes loadingAnimation {
+            0%, 100% { transform: scale(0.8); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="container">
+            <div class="logo">
+                <img class="RoundImg" src="https://cdn.luogu.com.cn/upload/image_hosting/cto5owfw.png"/>
+                曙光将至
+            </div>
+            <div class="nav-links">
+                <a href="https://dawncoming2025.github.io">主页</a>
+                <a href="https://dawncoming2025.github.io/recommand">推荐</a>
+                <a href="https://dawncoming2025.github.io/download">下载</a>
+                <a href="https://dawncoming2025.github.io/blog">博客</a>
+                <a href="https://dawncoming2025.github.io/team">团队</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main>
+        <h1>数学奥林匹克课程</h1>
+        <p>
+            精选数学奥林匹克课程，助力提升数学思维能力
+        </p>
+        
+        <div class="lessons-container">
+            <!-- 左侧课程列表 -->
+            <div class="lessons-list">
+                <div class="lessons-list-header">
+                    <h2>课程列表</h2>
+                    <p>点击课程名称开始学习</p>
+                </div>
+                <div class="lessons-list-content" id="lessons-list">
+                    <div class="loading">
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧视频播放器 -->
+            <div class="video-container">
+                <div class="video-header">
+                    <h2 id="current-lesson-title">选择课程开始学习</h2>
+                    <div class="file-selector" id="file-selector" style="display: none;">
+                        <span>选择文件:</span>
+                        <select id="file-select"></select>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <div class="video-placeholder" id="video-placeholder">
+                        <div class="icon">📚</div>
+                        <p>请从左侧选择课程开始学习</p>
+                    </div>
+                    <video class="video-player" id="video-player" controls style="display: none;">
+                        您的浏览器不支持 HTML5 视频标签。
+                    </video>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-left">
+                <img class="footer-logo" src="https://cdn.luogu.com.cn/upload/image_hosting/jxawvvuq.png" />
+                <div class="footer-links-container">
+                    <div class="footer-links-column">
+                        <a href="https://dawncoming2025.github.io/help/">帮助中心</a>
+                        <a href="https://dawncoming2025.github.io/help/faq">反馈问题</a>
+                    </div>
+                    <div class="footer-links-column">
+                        <a href="https://dawncoming2025.github.io/team/join">加入我们</a>
+                        <a href="https://dawncoming2025.github.io/help/update">更新日志</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-right">
+                <p>Developed by <a href="https://qm.qq.com/q/kD1XNMw2IK" target="_blank">DawnComing</a></p>
+                <p>&copy; 2025~2035 曙光将至</p>
+                <p>All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // 从API获取课程列表
+        async function fetchLessons() {
+            try {
+                const response = await fetch('https://dawncoming2025.github.io/Maths-Olympiad-Lessons-1/List.txt');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const text = await response.text();
+                
+                // 解析文本数据 - 使用全新的解析逻辑
+                const lessons = [];
+                const lines = text.split('\n');
+                
+                console.log("原始文本行数:", lines.length);
+                
+                for (const line of lines) {
+                    // 跳过空行
+                    if (!line.trim()) continue;
+                    
+                    console.log("处理行:", line);
+                    
+                    // 使用更简单直接的解析方法
+                    // 先找到第一个.mp4文件的位置
+                    const firstMp4Index = line.indexOf('.mp4');
+                    if (firstMp4Index === -1) {
+                        console.log("跳过行，因为没有找到.mp4文件:", line);
+                        continue;
+                    }
+                    
+                    // 提取序号（行首的数字）
+                    const numberMatch = line.match(/^(\d+)/);
+                    if (!numberMatch) {
+                        console.log("跳过行，无法提取序号:", line);
+                        continue;
+                    }
+                    const number = numberMatch[1];
+                    
+                    // 提取所有文件名（.mp4文件）
+                    const files = [];
+                    let searchIndex = 0;
+                    while (searchIndex < line.length) {
+                        const mp4Index = line.indexOf('.mp4', searchIndex);
+                        if (mp4Index === -1) break;
+                        
+                        // 找到文件名开始的位置
+                        let fileNameStart = mp4Index;
+                        while (fileNameStart > 0 && line[fileNameStart-1] !== ' ') {
+                            fileNameStart--;
+                        }
+                        
+                        const fileName = line.substring(fileNameStart, mp4Index + 4);
+                        files.push(fileName);
+                        
+                        searchIndex = mp4Index + 4;
+                    }
+                    
+                    // 提取标题（序号和第一个文件名之间的部分）
+                    const titleStart = number.length + 1;
+                    const titleEnd = line.indexOf(files[0]) - 1;
+                    const title = line.substring(titleStart, titleEnd).trim();
+                    
+                    console.log(`解析结果: 序号=${number}, 标题=${title}, 文件数=${files.length}, 文件=${files.join(', ')}`);
+                    
+                    lessons.push({
+                        number,
+                        title,
+                        files
+                    });
+                }
+                
+                return lessons;
+            } catch (error) {
+                console.error('获取课程列表失败:', error);
+                throw error;
+            }
+        }
+        
+        // 渲染课程列表
+        function renderLessons(lessons) {
+            const container = document.getElementById('lessons-list');
+            container.innerHTML = '';
+            
+            lessons.forEach(lesson => {
+                const lessonItem = document.createElement('div');
+                lessonItem.className = 'lesson-item';
+                lessonItem.dataset.number = lesson.number;
+                lessonItem.dataset.title = lesson.title;
+                lessonItem.dataset.files = JSON.stringify(lesson.files);
+                
+                lessonItem.innerHTML = `
+                    <div class="lesson-number">${lesson.number}</div>
+                    <div class="lesson-title">${lesson.title}</div>
+                    <div class="lesson-files">${lesson.files.length} 个视频文件</div>
+                `;
+                
+                // 添加点击事件
+                lessonItem.addEventListener('click', function() {
+                    // 移除所有激活状态
+                    document.querySelectorAll('.lesson-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // 添加当前激活状态
+                    this.classList.add('active');
+                    
+                    // 加载课程视频
+                    loadLessonVideo(this);
+                });
+                
+                container.appendChild(lessonItem);
+            });
+            
+            // 默认选择第一个课程
+            if (lessons.length > 0) {
+                const firstLesson = container.querySelector('.lesson-item');
+                firstLesson.classList.add('active');
+                loadLessonVideo(firstLesson);
+            }
+        }
+        
+        // 加载课程视频
+        function loadLessonVideo(lessonElement) {
+            const number = lessonElement.dataset.number;
+            const title = lessonElement.dataset.title;
+            const files = JSON.parse(lessonElement.dataset.files);
+            
+            // 更新标题
+            document.getElementById('current-lesson-title').textContent = `${number} ${title}`;
+            
+            // 处理文件选择器
+            const fileSelector = document.getElementById('file-selector');
+            const fileSelect = document.getElementById('file-select');
+            
+            if (files.length > 1) {
+                // 显示文件选择器
+                fileSelector.style.display = 'flex';
+                
+                // 填充选项
+                fileSelect.innerHTML = '';
+                files.forEach((file, index) => {
+                    const option = document.createElement('option');
+                    option.value = file;
+                    option.textContent = `文件 ${index + 1}`;
+                    fileSelect.appendChild(option);
+                });
+                
+                // 添加事件监听器
+                fileSelect.onchange = function() {
+                    playVideo(this.value);
+                };
+                
+                // 播放第一个文件
+                playVideo(files[0]);
+            } else {
+                // 隐藏文件选择器
+                fileSelector.style.display = 'none';
+                
+                // 播放唯一文件
+                playVideo(files[0]);
+            }
+        }
+        
+        // 播放视频
+        function playVideo(filename) {
+            const videoPlayer = document.getElementById('video-player');
+            const videoPlaceholder = document.getElementById('video-placeholder');
+            
+            // 隐藏占位符，显示视频播放器
+            videoPlaceholder.style.display = 'none';
+            videoPlayer.style.display = 'block';
+            
+            // 设置视频源
+            const videoUrl = `https://media.githubusercontent.com/media/dawncoming2025/Maths-Olympiad-Lessons-1/main/${filename}`;
+            videoPlayer.src = videoUrl;
+            
+            // 加载视频
+            videoPlayer.load();
+            
+            console.log(`加载视频: ${videoUrl}`);
+        }
+        
+        // 初始化课程列表
+        async function initLessons() {
+            const container = document.getElementById('lessons-list');
+            
+            try {
+                // 显示加载状态
+                container.innerHTML = `
+                    <div class="loading">
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                    </div>
+                `;
+                
+                const lessons = await fetchLessons();
+                
+                // 调试：输出解析结果
+                console.log('解析到的课程:', lessons);
+                
+                if (lessons.length === 0) {
+                    container.innerHTML = `
+                        <div style="color: #e53e3e; padding: 10px; text-align: center;">
+                            未找到任何课程，请检查列表文件格式
+                        </div>
+                    `;
+                    return;
+                }
+                
+                renderLessons(lessons);
+            } catch (error) {
+                console.error('加载课程列表失败:', error);
+                container.innerHTML = `
+                    <div style="color: #e53e3e; padding: 10px; text-align: center;">
+                        加载课程列表失败，请稍后再试
+                    </div>
+                `;
+            }
+        }
+        
+        // 页面加载完成后初始化课程列表
+        window.addEventListener('DOMContentLoaded', initLessons);
+    </script>
+</body>
+</html>
