@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数竞目录 - 曙光将至</title>
+    <link rel="shortcut icon" href="https://cdn.luogu.com.cn/upload/image_hosting/cto5owfw.png" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        nav {
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(74, 85, 104, 0.5);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        nav .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #63b3ed;
+            text-shadow: 0 0 15px rgba(99, 179, 237, 0.5);
+        }
+
+        nav .nav-links {
+            display: flex;
+            gap: 1.8rem;
+        }
+
+        nav .nav-links a {
+            color: #cbd5e0;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav .nav-links a:hover {
+            color: #fff;
+            background: rgba(99, 179, 237, 0.15);
+        }
+
+        nav .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #63b3ed;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        nav .nav-links a:hover::after {
+            width: 70%;
+        }
+
+        .RoundImg {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(99, 179, 237, 0.5);
+            box-shadow: 0 0 15px rgba(99, 179, 237, 0.3);
+        }
+
+        main {
+            padding: 3rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex: 1;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .course-container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .feature {
+            background: rgba(30, 41, 59, 0.7);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(74, 85, 104, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+            border-color: rgba(99, 179, 237, 0.4);
+        }
+
+        .feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #63b3ed, #4299e1);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .feature:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #90cdf4;
+            text-align: center;
+        }
+
+        .feature p {
+            color: #cbd5e0;
+            font-size: 1.1rem;
+            margin-bottom: 1.8rem;
+            text-align: center;
+        }
+
+        /* 课程选择表单样式 */
+        .course-form {
+            margin-top: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cbd5e0;
+            font-weight: 500;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(74, 85, 104, 0.5);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #63b3ed;
+            box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.2);
+        }
+
+        .form-group select option {
+            background: #1e293b;
+            color: #e2e8f0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #4299e1, #63b3ed);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+            margin-top: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            color: #fc8181;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message {
+            color: #68d391;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .feature {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        footer {
+            background: rgba(15, 23, 42, 0.95);
+            padding: 2.5rem 2rem;
+            color: #a0aec0;
+            border-top: 1px solid rgba(74, 85, 104, 0.4);
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+        }
+
+        .footer-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .footer-logo:hover {
+            transform: rotate(2deg) scale(1.05);
+            box-shadow: 0 8px 20px rgba(99, 179, 237, 0.3);
+        }
+
+        /* 三列链接布局 */
+        .footer-links-container {
+            display: flex;
+            gap: 40px;
+        }
+
+        .footer-links-column {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .footer-links-column h3 {
+            color: #63b3ed;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid rgba(99, 179, 237, 0.3);
+        }
+
+        .footer-links-column a {
+            color: #cbd5e0;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 8px;
+            background: rgba(30, 41, 59, 0.6);
+            width: fit-content;
+            min-width: 160px;
+        }
+
+        .footer-links-column a:hover {
+            background: rgba(99, 179, 237, 0.2);
+            color: #fff;
+            transform: translateX(8px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-links-column a::before {
+            content: "»";
+            color: #63b3ed;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links-column a:hover::before {
+            opacity: 1;
+        }
+
+        .footer-right {
+            text-align: right;
+            min-width: 300px;
+            padding-top: 10px;
+        }
+
+        .footer-right p {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .footer-right a {
+            color: #63b3ed;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .footer-right a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #63b3ed;
+            transition: width 0.3s ease;
+        }
+
+        .footer-right a:hover::after {
+            width: 100%;
+        }
+
+        .footer-right a:hover {
+            color: #90cdf4;
+            text-shadow: 0 0 8px rgba(99, 179, 237, 0.4);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1100px) {
+            .footer-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .footer-left {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .footer-right {
+                text-align: left;
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav .container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .feature {
+                padding: 1.5rem;
+            }
+            
+            .feature h2 {
+                font-size: 1.8rem;
+            }
+            
+            .footer-links-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="container">
+            <div class="logo">
+                <img class="RoundImg" src="https://cdn.luogu.com.cn/upload/image_hosting/cto5owfw.png"/>
+                曙光将至
+            </div>
+            <div class="nav-links">
+                <a href="https://dawncoming2025.github.io">主页</a>
+                <a href="https://dawncoming2025.github.io/recommand">推荐</a>
+                <a href="https://dawncoming2025.github.io/download">下载</a>
+                <a href="https://dawncoming2025.github.io/blog">博客</a>
+                <a href="https://dawncoming2025.github.io/team">团队</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main>
+        <div class="course-container">
+            <!-- 课程目录选择功能 -->
+            <div class="feature">
+                <h2>奥数教程</h2>
+                
+                <div class="course-form">
+                    <div class="form-group">
+                        <label for="course-select">选择课程期数</label>
+                        <select id="course-select">
+                            <option value="">请选择课程期数</option>
+                            <option value="1">第一期</option>
+                            <option value="2">第二期</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="access-code">获取码</label>
+                        <input type="text" id="access-code" placeholder="请输入获取码">
+                    </div>
+                    
+                    <button class="submit-btn" id="submit-course">进入课程</button>
+                    
+                    <div class="error-message" id="error-message">
+                        获取码错误，请重新输入
+                    </div>
+                    
+                    <div class="success-message" id="success-message">
+                        获取码正确，正在跳转...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-left">
+                <img class="footer-logo" src="https://cdn.luogu.com.cn/upload/image_hosting/jxawvvuq.png" />
+                <div class="footer-links-container">
+                    <div class="footer-links-column">
+                        <a href="https://dawncoming2025.github.io/help/">帮助中心</a>
+                        <a href="https://dawncoming2025.github.io/help/faq">反馈问题</a>
+                    </div>
+                    <div class="footer-links-column">
+                        <a href="https://dawncoming2025.github.io/team/join">加入我们</a>
+                        <a href="https://dawncoming2025.github.io/help/update">更新日志</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-right">
+                <p>Developed by <a href="https://qm.qq.com/q/kD1XNMw2IK" target="_blank">DawnComing</a></p>
+                <p>&copy; 2025~2035 曙光将至</p>
+                <p>All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // 获取码验证逻辑
+        document.getElementById('submit-course').addEventListener('click', function() {
+            const courseSelect = document.getElementById('course-select');
+            const accessCode = document.getElementById('access-code');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            
+            // 隐藏所有消息
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // 验证输入
+            if (!courseSelect.value) {
+                errorMessage.textContent = '请选择课程期数';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            if (!accessCode.value) {
+                errorMessage.textContent = '请输入获取码';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            if (accessCode.value === 'JSSJYZXQXSC@Maths-Olympiad-Lessons') {
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = `https://dawncoming2025.github.io/Maths-Olympiad-Player/${courseSelect.value}.html`;
+                }, 1500);
+            } else {
+                errorMessage.textContent = '获取码错误，请重新输入';
+                errorMessage.style.display = 'block';
+            }
+        });
+        
+        // 添加动画效果
+        document.querySelectorAll('.feature').forEach((feature, index) => {
+            feature.style.animationDelay = `${0.1 * index}s`;
+        });
+    </script>
+</body>
+</html>
