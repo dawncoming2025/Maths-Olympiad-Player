@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数竞第一期 - 曙光将至</title>
+    <title>数竞第二期 - 曙光将至</title>
     <link rel="shortcut icon" href="https://cdn.luogu.com.cn/upload/image_hosting/cto5owfw.png" type="image/x-icon">
     <style>
         * {
@@ -524,9 +524,9 @@
 
     <!-- 主要内容 -->
     <main>
-        <h1>数竞第一期</h1>
+        <h1>数竞第二期</h1>
         <p>
-            边红平初中拔尖培优课程-第1期
+            边红平初中拔尖培优课程-第2期
         </p>
         
         <div class="lessons-container">
@@ -595,7 +595,7 @@
         // 从API获取课程列表
         async function fetchLessons() {
             try {
-                const response = await fetch('https://dawncoming2025.github.io/Maths-Olympiad-Lessons-1/List.txt');
+                const response = await fetch('https://dawncoming2025.github.io/Maths-Olympiad-Lessons-2/List.txt');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -765,7 +765,7 @@
             videoPlayer.style.display = 'block';
             
             // 设置视频源
-            const videoUrl = `https://media.githubusercontent.com/media/dawncoming2025/Maths-Olympiad-Lessons-1/main/${filename}`;
+            const videoUrl = `https://media.githubusercontent.com/media/dawncoming2025/Maths-Olympiad-Lessons-2/main/${filename}`;
             videoPlayer.src = videoUrl;
             
             // 加载视频
